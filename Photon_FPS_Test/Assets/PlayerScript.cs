@@ -14,11 +14,13 @@ public class PlayerScript : MonoBehaviourPun
     public float maxHp = 100.0f;
     public float bulletOffset = 0.0f;
 
-    public Transform trGun;
-    public GameObject bullet;
+    public Transform gunOffset;
+    public GameObject BulletPrefab;
     private Transform tr;
     public Transform CameraPivot;
     public Slider hpBar;
+
+    private new Rigidbody rigidbody;
 
     private void Start()
     {
@@ -30,6 +32,8 @@ public class PlayerScript : MonoBehaviourPun
 
         hpBar = GameObject.FindWithTag("HP Bar").GetComponent<Slider>();
         curHp = maxHp;
+
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -43,18 +47,44 @@ public class PlayerScript : MonoBehaviourPun
         tr.Translate(Vector3.forward * v * Time.deltaTime * speed);
         tr.Rotate(Vector3.up * h * Time.deltaTime * rotSpeed);
 
-        bool fire = Input.GetMouseButtonDown(0);
+        bool fire = Input.GetMouseButton(0);
         if (fire)
         {
-            Shooting();
+            // RpcTarget.AllViaServer = RPC 호출을 서버에게 요청하고 서버가 '나'를 포함한 모든 클라이언트에게 '순서'대로 쏴준다
+            photonView.RPC("Fire", RpcTarget.AllViaServer, rigidbody.position, rigidbody.rotation);
         }
     }
 
-    private void Shooting()
+    [PunRPC]
+    public void Fire(Vector3 position, Quaternion rotation, PhotonMessageInfo info)
     {
-        Vector3 bulletPosition = trGun.position + trGun.forward * bulletOffset;
-        PhotonNetwork.Instantiate("bullet", bulletPosition, trGun.rotation);
+        float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+        GameObject bullet;
+        
+        /** Use this if you want to fire one bullet at a time **/
+        // 불릿 생성
+        bullet = Instantiate(BulletPrefab, gunOffset.position, Quaternion.identity) as GameObject;
+        // 불릿 초기화 로직
+        bullet.GetComponent<BulletCtrl>().InitializeBullet(photonView.Owner, (rotation * Vector3.forward), Mathf.Abs(lag));
+
+        /** 한 번에 두 개의 총알을 발사하고 싶을 때 추가 **/
+        //Vector3 baseX = rotation * Vector3.right;
+        //Vector3 baseZ = rotation * Vector3.forward;
+
+        //Vector3 offsetLeft = -1.5f * baseX - 0.5f * baseZ;
+        //Vector3 offsetRight = 1.5f * baseX - 0.5f * baseZ;
+
+        //bullet = Instantiate(BulletPrefab, rigidbody.position + offsetLeft, Quaternion.identity) as GameObject;
+        //bullet.GetComponent<Bullet>().InitializeBullet(photonView.Owner, baseZ, Mathf.Abs(lag));
+        //bullet = Instantiate(BulletPrefab, rigidbody.position + offsetRight, Quaternion.identity) as GameObject;
+        //bullet.GetComponent<Bullet>().InitializeBullet(photonView.Owner, baseZ, Mathf.Abs(lag));
     }
+
+    //private void Shooting()
+    //{
+    //    Vector3 bulletPosition = gunOffset.position + gunOffset.forward * bulletOffset;
+    //    PhotonNetwork.Instantiate("bullet", bulletPosition, gunOffset.rotation);
+    //}
 
     public float HP
     {

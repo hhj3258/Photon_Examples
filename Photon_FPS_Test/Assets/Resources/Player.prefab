@@ -143,8 +143,9 @@ Transform:
   - {fileID: 4028947353519438360}
   - {fileID: 4028947354616306291}
   - {fileID: 131057066851763024}
+  - {fileID: 734699894110159333}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4028947354370412529
 MeshFilter:
@@ -284,9 +285,9 @@ MonoBehaviour:
   speed: 5
   rotSpeed: 120
   maxHp: 100
-  bulletOffset: 1.98
-  trGun: {fileID: 4028947353519438360}
-  bullet: {fileID: 2665636331380214956, guid: cd2294cfa1e285b4cbf54d0840f1342a, type: 3}
+  bulletOffset: 0
+  gunOffset: {fileID: 734699894110159333}
+  BulletPrefab: {fileID: 2665636331380214956, guid: cd2294cfa1e285b4cbf54d0840f1342a, type: 3}
   CameraPivot: {fileID: 131057066851763024}
   hpBar: {fileID: 0}
 --- !u!114 &4028947355081888923
@@ -410,6 +411,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6998071181223986083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 734699894110159333}
+  m_Layer: 0
+  m_Name: GunOffset
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &734699894110159333
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6998071181223986083}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.45, y: 0, z: 1.24}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4028947354370412528}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8460143125071600601
 GameObject:
   m_ObjectHideFlags: 0
